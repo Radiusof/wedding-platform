@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wedding Platform Documentation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #fafafa;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #ee4c2c 0%, #ff6f47 100%);
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(238, 76, 44, 0.2);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 300;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .nav-tabs {
+            background: white;
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .nav-tabs ul {
+            list-style: none;
+            display: flex;
+            overflow-x: auto;
+            padding: 0 20px;
+        }
+
+        .nav-tabs li {
+            margin-right: 2rem;
+        }
+
+        .nav-tabs a {
+            display: block;
+            padding: 1rem 0;
+            text-decoration: none;
+            color: #666;
+            font-weight: 500;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .nav-tabs a:hover,
+        .nav-tabs a.active {
+            color: #ee4c2c;
+            border-bottom-color: #ee4c2c;
+        }
+
+        .content {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .sidebar {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            height: fit-content;
+            position: sticky;
+            top: 100px;
+        }
+
+        .sidebar h3 {
+            color: #ee4c2c;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .sidebar ul {
+            list-style: none;
+        }
+
+        .sidebar li {
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar a {
+            text-decoration: none;
+            color: #666;
+            font-size: 0.9rem;
+            transition: color 0.3s ease;
+        }
+
+        .sidebar a:hover {
+            color: #ee4c2c;
+        }
+
+        .main-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .section {
+            margin-bottom: 3rem;
+        }
+
+        .section h2 {
+            color: #ee4c2c;
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+            font-weight: 400;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 0.5rem;
+        }
+
+        .service-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .service-card {
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            background: #fafafa;
+        }
+
+        .service-card:hover {
+            border-color: #ee4c2c;
+            box-shadow: 0 4px 12px rgba(238, 76, 44, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .service-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .service-icon {
+            font-size: 1.5rem;
+            margin-right: 0.5rem;
+        }
+
+        .service-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .service-port {
+            background: #ee4c2c;
+            color: white;
+            padding: 0.2rem 0.5rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            margin-left: auto;
+        }
+
+        .service-description {
+            color: #666;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .service-features {
+            list-style: none;
+        }
+
+        .service-features li {
+            padding: 0.2rem 0;
+            font-size: 0.85rem;
+            color: #777;
+        }
+
+        .service-features li:before {
+            content: "✓";
+            color: #28a745;
+            margin-right: 0.5rem;
+            font-weight: bold;
+        }
+
+        .code-block {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 6px;
+            padding: 1rem;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 0.85rem;
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+
+        .api-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .api-table th {
+            background: #ee4c2c;
+            color: white;
+            padding: 1rem;
+            text-align: left;
+            font-weight: 500;
+        }
+
+        .api-table td {
+            padding: 0.8rem 1rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .api-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.3rem 0.6rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            margin-right: 0.5rem;
+        }
+
+        .badge-primary { background: #007bff; color: white; }
+        .badge-success { background: #28a745; color: white; }
+        .badge-warning { background: #ffc107; color: #212529; }
+        .badge-info { background: #17a2b8; color: white; }
+
+        .alert {
+            padding: 1rem;
+            border-radius: 6px;
+            margin: 1rem 0;
+        }
+
+        .alert-info {
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+            color: #0c5460;
+        }
+
+        .quick-start {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            padding: 2rem;
+            border-radius: 8px;
+            margin: 2rem 0;
+        }
+
+        .quick-start h3 {
+            margin-bottom: 1rem;
+            font-size: 1.4rem;
+        }
+
+        .command-list {
+            list-style: none;
+        }
+
+        .command-list li {
+            background: rgba(255,255,255,0.1);
+            padding: 0.5rem 1rem;
+            margin: 0.5rem 0;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+
+        @media (max-width: 768px) {
+            .content {
+                grid-template-columns: 1fr;
+            }
+            
+            .sidebar {
+                order: 2;
+                position: static;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .service-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="container">
+            <h1>🎉 Wedding Platform</h1>
+            <p>Microservices Architecture Documentation</p>
+        </div>
+    </div>
+
+    <nav class="nav-tabs">
+        <div class="container">
+            <ul>
+                <li><a href="#overview" class="active">Overview</a></li>
+                <li><a href="#architecture">Architecture</a></li>
+                <li><a href="#services">Services</a></li>
+                <li><a href="#apis">APIs</a></li>
+                <li><a href="#deployment">Deployment</a></li>
+                <li><a href="#quickstart">Quick Start</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="content">
+        <aside class="sidebar">
+            <h3>Navigation</h3>
+            <ul>
+                <li><a href="#overview">Project Overview</a></li>
+                <li><a href="#architecture">System Architecture</a></li>
+                <li><a href="#microservices">Microservices</a></li>
+                <li><a href="#database">Database Schema</a></li>
+                <li><a href="#communication">Inter-Service Communication</a></li>
+                <li><a href="#external-apis">External APIs</a></li>
+                <li><a href="#deployment">Deployment Guide</a></li>
+                <li><a href="#development">Development Setup</a></li>
+                <li><a href="#troubleshooting">Troubleshooting</a></li>
+            </ul>
+        </aside>
+
+        <main class="main-content">
+            <section id="overview" class="section">
+                <h2>Project Overview</h2>
+                <p>Wedding Platform is a modern, microservices-based web application designed to provide comprehensive wedding planning and guest management capabilities. Built with scalability and maintainability in mind, it leverages industry-standard technologies and patterns.</p>
+                
+                <div class="alert alert-info">
+                    <strong>Architecture Pattern:</strong> Event-driven microservices with Redis pub/sub messaging and RESTful APIs for external communication.
+                </div>
+
+                <table class="api-table">
+                    <thead>
+                        <tr>
+                            <th>Component</th>
+                            <th>Technology</th>
+                            <th>Purpose</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Backend Services</td>
+                            <td>NestJS + TypeScript</td>
+                            <td>Microservices implementation</td>
+                            <td><span class="badge badge-warning">In Development</span></td>
+                        </tr>
+                        <tr>
+                            <td>Frontend</td>
+                            <td>Vue.js 3 + TypeScript</td>
+                            <td>User interface</td>
+                            <td><span class="badge badge-warning">Planned</span></td>
+                        </tr>
+                        <tr>
+                            <td>Database</td>
+                            <td>MongoDB</td>
+                            <td>Data persistence</td>
+                            <td><span class="badge badge-success">Ready</span></td>
+                        </tr>
+                        <tr>
+                            <td>Message Broker</td>
+                            <td>Redis</td>
+                            <td>Inter-service communication</td>
+                            <td><span class="badge badge-success">Ready</span></td>
+                        </tr>
+                        <tr>
+                            <td>Infrastructure</td>
+                            <td>Docker + GCP</td>
+                            <td>Container orchestration</td>
+                            <td><span class="badge badge-info">Configured</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <section id="architecture" class="section">
+                <h2>System Architecture</h2>
+                <p>The platform follows a distributed microservices architecture with clear separation of concerns and standardized communication patterns.</p>
+
+                <h3>Core Principles</h3>
+                <ul>
+                    <li><strong>Single Responsibility:</strong> Each service handles one business domain</li>
+                    <li><strong>Event-Driven:</strong> Services communicate via Redis pub/sub events</li>
+                    <li><strong>API Gateway Pattern:</strong> Centralized entry point for all client requests</li>
+                    <li><strong>Database per Service:</strong> Each service owns its data</li>
+                </ul>
+
+                <div class="code-block">
+Client → API Gateway → [Microservices] ↔ Redis Pub/Sub
+                           ↓
+                      MongoDB Collections</div>
+            </section>
+
+            <section id="microservices" class="section">
+                <h2>Microservices Overview</h2>
+                
+                <div class="service-grid">
+                    <div class="service-card">
+                        <div class="service-header">
+                            <span class="service-icon">🚪</span>
+                            <span class="service-title">API Gateway</span>
+                            <span class="service-port">:3000</span>
+                        </div>
+                        <div class="service-description">
+                            Central entry point managing authentication, routing, and rate limiting for all client requests.
+                        </div>
+                        <ul class="service-features">
+                            <li>JWT Authentication</li>
+                            <li>Request routing</li>
+                            <li>Rate limiting</li>
+                            <li>CORS management</li>
+                        </ul>
+                    </div>
+
+                    <div class="service-card">
+                        <div class="service-header">
+                            <span class="service-icon">👤</span>
+                            <span class="service-title">User Service</span>
+                            <span class="service-port">:3001</span>
+                        </div>
+                        <div class="service-description">
+                            Manages user accounts, authentication, and role-based access control.
+                        </div>
+                        <ul class="service-features">
+                            <li>User registration/login</li>
+                            <li>Profile management</li>
+                            <li>Role permissions</li>
+                            <li>Session management</li>
+                        </ul>
+                    </div>
+
+                    <div class="service-card">
+                        <div class="service-header">
+                            <span class="service-icon">❓</span>
+                            <span class="service-title">FAQ Service</span>
+                            <span class="service-port">:3002</span>
+                        </div>
+                        <div class="service-description">
+                            Handles frequently asked questions with categorization and dynamic content management.
+                        </div>
+                        <ul class="service-features">
+                            <li>Question categorization</li>
+                            <li>Content management</li>
+                            <li>Search functionality</li>
+                            <li>Admin panel</li>
+                        </ul>
+                    </div>
+
+                    <div class="service-card">
+                        <div class="service-header">
+                            <span class="service-icon">📍</span>
+                            <span class="service-title">Location Service</span>
+                            <span class="service-port">:3003</span>
+                        </div>
+                        <div class="service-description">
+                            Manages venue locations with Google Maps integration for directions and visualization.
+                        </div>
+                        <ul class="service-features">
+                            <li>Google Maps integration</li>
+                            <li>Route calculation</li>
+                            <li>Venue management</li>
+                            <li>Location search</li>
+                        </ul>
+                    </div>
+
+                    <div class="service-card">
+                        <div class="service-header">
+                            <span class="service-icon">🏨</span>
+                            <span class="service-title">Accommodation Service</span>
+                            <span class="service-port">:3004</span>
+                        </div>
+                        <div class="service-description">
+                            Provides nearby accommodation options with pricing and booking integration.
+                        </div>
+                        <ul class="service-features">
+                            <li>Hotel/Airbnb search</li>
+                            <li>Price comparison</li>
+                            <li>Booking integration</li>
+                            <li>Distance calculation</li>
+                        </ul>
+                    </div>
+
+                    <div class="service-card">
+                        <div class="service-header">
+                            <span class="service-icon">🎵</span>
+                            <span class="service-title">Playlist Service</span>
+                            <span class="service-port">:3005</span>
+                        </div>
+                        <div class="service-description">
+                            Manages collaborative playlists with Spotify integration for music suggestions.
+                        </div>
+                        <ul class="service-features">
+                            <li>Spotify API integration</li>
+                            <li>Song suggestions</li>
+                            <li>Playlist management</li>
+                            <li>Approval workflow</li>
+                        </ul>
+                    </div>
+
+                    <div class="service-card">
+                        <div class="service-header">
+                            <span class="service-icon">📧</span>
+                            <span class="service-title">Notification Service</span>
+                            <span class="service-port">:3006</span>
+                        </div>
+                        <div class="service-description">
+                            Handles email notifications and real-time updates for user engagement.
+                        </div>
+                        <ul class="service-features">
+                            <li>Email notifications</li>
+                            <li>Event-driven messaging</li>
+                            <li>Template management</li>
+                            <li>Delivery tracking</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <section id="database" class="section">
+                <h2>Database Schema</h2>
+                <p>MongoDB collections organized by service domain with clear data ownership patterns.</p>
+
+                <div class="code-block">wedding_db/
+├── users/              # User accounts and profiles
+├── faqs/               # Questions and answers
+├── locations/          # Venue information
+├── accommodations/     # Hotel and lodging data
+├── playlist/           # Music playlists
+├── songs/              # Individual song entries
+└── notifications/      # User notifications</div>
+
+                <table class="api-table">
+                    <thead>
+                        <tr>
+                            <th>Collection</th>
+                            <th>Service Owner</th>
+                            <th>Key Fields</th>
+                            <th>Indexes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>users</td>
+                            <td>User Service</td>
+                            <td>email, firstName, lastName, role</td>
+                            <td>email (unique), role</td>
+                        </tr>
+                        <tr>
+                            <td>faqs</td>
+                            <td>FAQ Service</td>
+                            <td>question, answer, category, order</td>
+                            <td>category, order</td>
+                        </tr>
+                        <tr>
+                            <td>locations</td>
+                            <td>Location Service</td>
+                            <td>name, address, coordinates, type</td>
+                            <td>type, coordinates (2dsphere)</td>
+                        </tr>
+                        <tr>
+                            <td>accommodations</td>
+                            <td>Accommodation Service</td>
+                            <td>name, price, rating, distance</td>
+                            <td>price, rating, distance</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <section id="communication" class="section">
+                <h2>Inter-Service Communication</h2>
+                <p>Services communicate through Redis pub/sub channels with standardized event formats.</p>
+
+                <h3>Redis Channels</h3>
+                <div class="code-block">user_events          → User lifecycle events
+faq_events           → FAQ content changes  
+location_events      → Venue updates
+accommodation_events → Lodging data changes
+playlist_events      → Music-related events
+notification_events  → Messaging triggers</div>
+
+                <h3>Event Structure</h3>
+                <div class="code-block">{
+  "eventType": "user.created",
+  "timestamp": "2024-01-15T10:30:00Z",
+  "userId": "user123",
+  "data": {
+    "userId": "user123",
+    "user": { ... }
+  }
+}</div>
+            </section>
+
+            <div class="quick-start">
+                <h3>🚀 Quick Start Guide</h3>
+                <p>Get the development environment running in minutes:</p>
+                <ol class="command-list">
+                    <li>git clone &lt;repository-url&gt;</li>
+                    <li>cd wedding-platform</li>
+                    <li>docker-compose up -d</li>
+                    <li>open http://localhost:8080</li>
+                </ol>
+            </div>
+
+            <section id="external-apis" class="section">
+                <h2>External APIs Integration</h2>
+                
+                <table class="api-table">
+                    <thead>
+                        <tr>
+                            <th>API</th>
+                            <th>Service</th>
+                            <th>Purpose</th>
+                            <th>Authentication</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Google Maps API</td>
+                            <td>Location Service</td>
+                            <td>Maps, geocoding, directions</td>
+                            <td>API Key</td>
+                        </tr>
+                        <tr>
+                            <td>Spotify Web API</td>
+                            <td>Playlist Service</td>
+                            <td>Music search, playlist management</td>
+                            <td>OAuth 2.0</td>
+                        </tr>
+                        <tr>
+                            <td>Booking.com API</td>
+                            <td>Accommodation Service</td>
+                            <td>Hotel search and pricing</td>
+                            <td>API Key</td>
+                        </tr>
+                        <tr>
+                            <td>Gmail SMTP</td>
+                            <td>Notification Service</td>
+                            <td>Email delivery</td>
+                            <td>App Password</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <section id="deployment" class="section">
+                <h2>Deployment Architecture</h2>
+                <p>Production deployment on Google Cloud Platform with container orchestration.</p>
+
+                <h3>Development Environment</h3>
+                <div class="code-block"># Local development stack
+docker-compose up -d          # Start all services
+docker-compose logs -f        # View logs
+docker-compose restart &lt;service&gt;  # Restart specific service</div>
+
+                <h3>Production Environment (GCP)</h3>
+                <ul>
+                    <li><strong>Cloud Run:</strong> Auto-scaling containers for each microservice</li>
+                    <li><strong>MongoDB Atlas:</strong> Managed database service</li>
+                    <li><strong>Redis Cloud:</strong> Managed Redis instance</li>
+                    <li><strong>Cloud Load Balancer:</strong> Traffic distribution</li>
+                    <li><strong>Cloud Storage:</strong> Static assets and media files</li>
+                </ul>
+            </section>
+        </main>
+    </div>
+</body>
+</html>
