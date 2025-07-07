@@ -1,0 +1,230 @@
+version: '3.8'
+
+services:
+  # Base de données MongoDB
+  mongodb:
+    image: mongo:7.0
+    container_name: wedding-mongodb
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password
+      MONGO_INITDB_DATABASE: wedding_db
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - wedding-network
+
+  # Redis pour la communication inter-services
+  redis:
+    image: redis:7.2-alpine
+    container_name: wedding-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    command: redis-server --appendonly yes
+    volumes:
+      - redis_data:/data
+    networks:
+      - wedding-network
+
+  # API Gateway
+  api-gateway:
+    build: 
+      context: ./services/api-gateway
+      dockerfile: Dockerfile
+    container_name: wedding-api-gateway
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+      - PORT=3000
+      - MONGODB_URI=mongodb://admin:password@mongodb:27017/wedding_db?authSource=admin
+      - REDIS_URL=redis://redis:6379
+      - JWT_SECRET=your-jwt-secret-here
+    depends_on:
+      - mongodb
+      - redis
+    volumes:
+      - ./services/api-gateway:/app
+      - /app/node_modules
+    networks:
+      - wedding-network
+
+  # User Service
+  user-service:
+    build: 
+      context: ./services/user-service
+      dockerfile: Dockerfile
+    container_name: wedding-user-service
+    restart: unless-stopped
+    ports:
+      - "3001:3001"
+    environment:
+      - NODE_ENV=development
+      - PORT=3001
+      - MONGODB_URI=mongodb://admin:password@mongodb:27017/wedding_db?authSource=admin
+      - REDIS_URL=redis://redis:6379
+      - JWT_SECRET=your-jwt-secret-here
+    depends_on:
+      - mongodb
+      - redis
+    volumes:
+      - ./services/user-service:/app
+      - /app/node_modules
+    networks:
+      - wedding-network
+
+  # FAQ Service
+  faq-service:
+    build: 
+      context: ./services/faq-service
+      dockerfile: Dockerfile
+    container_name: wedding-faq-service
+    restart: unless-stopped
+    ports:
+      - "3002:3002"
+    environment:
+      - NODE_ENV=development
+      - PORT=3002
+      - MONGODB_URI=mongodb://admin:password@mongodb:27017/wedding_db?authSource=admin
+      - REDIS_URL=redis://redis:6379
+    depends_on:
+      - mongodb
+      - redis
+    volumes:
+      - ./services/faq-service:/app
+      - /app/node_modules
+    networks:
+      - wedding-network
+
+  # Location Service
+  location-service:
+    build: 
+      context: ./services/location-service
+      dockerfile: Dockerfile
+    container_name: wedding-location-service
+    restart: unless-stopped
+    ports:
+      - "3003:3003"
+    environment:
+      - NODE_ENV=development
+      - PORT=3003
+      - MONGODB_URI=mongodb://admin:password@mongodb:27017/wedding_db?authSource=admin
+      - REDIS_URL=redis://redis:6379
+      - GOOGLE_MAPS_API_KEY=your-google-maps-api-key
+    depends_on:
+      - mongodb
+      - redis
+    volumes:
+      - ./services/location-service:/app
+      - /app/node_modules
+    networks:
+      - wedding-network
+
+  # Accommodation Service
+  accommodation-service:
+    build: 
+      context: ./services/accommodation-service
+      dockerfile: Dockerfile
+    container_name: wedding-accommodation-service
+    restart: unless-stopped
+    ports:
+      - "3004:3004"
+    environment:
+      - NODE_ENV=development
+      - PORT=3004
+      - MONGODB_URI=mongodb://admin:password@mongodb:27017/wedding_db?authSource=admin
+      - REDIS_URL=redis://redis:6379
+      - BOOKING_API_KEY=your-booking-api-key
+    depends_on:
+      - mongodb
+      - redis
+    volumes:
+      - ./services/accommodation-service:/app
+      - /app/node_modules
+    networks:
+      - wedding-network
+
+  # Playlist Service
+  playlist-service:
+    build: 
+      context: ./services/playlist-service
+      dockerfile: Dockerfile
+    container_name: wedding-playlist-service
+    restart: unless-stopped
+    ports:
+      - "3005:3005"
+    environment:
+      - NODE_ENV=development
+      - PORT=3005
+      - MONGODB_URI=mongodb://admin:password@mongodb:27017/wedding_db?authSource=admin
+      - REDIS_URL=redis://redis:6379
+      - SPOTIFY_CLIENT_ID=your-spotify-client-id
+      - SPOTIFY_CLIENT_SECRET=your-spotify-client-secret
+    depends_on:
+      - mongodb
+      - redis
+    volumes:
+      - ./services/playlist-service:/app
+      - /app/node_modules
+    networks:
+      - wedding-network
+
+  # Notification Service
+  notification-service:
+    build: 
+      context: ./services/notification-service
+      dockerfile: Dockerfile
+    container_name: wedding-notification-service
+    restart: unless-stopped
+    ports:
+      - "3006:3006"
+    environment:
+      - NODE_ENV=development
+      - PORT=3006
+      - MONGODB_URI=mongodb://admin:password@mongodb:27017/wedding_db?authSource=admin
+      - REDIS_URL=redis://redis:6379
+      - SMTP_HOST=smtp.gmail.com
+      - SMTP_PORT=587
+      - SMTP_USER=your-email@gmail.com
+      - SMTP_PASS=your-app-password
+    depends_on:
+      - mongodb
+      - redis
+    volumes:
+      - ./services/notification-service:/app
+      - /app/node_modules
+    networks:
+      - wedding-network
+
+  # Frontend Vue.js
+  frontend:
+    build: 
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: wedding-frontend
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      - NODE_ENV=development
+      - VITE_API_URL=http://localhost:3000
+    depends_on:
+      - api-gateway
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    networks:
+      - wedding-network
+
+volumes:
+  mongodb_data:
+  redis_data:
+
+networks:
+  wedding-network:
+    driver: bridge
