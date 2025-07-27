@@ -7,6 +7,11 @@ import { RedisProvider } from './redis.provider';
 import { AuthModule } from './auth/auth.module';
 import { HttpModule } from '@nestjs/axios';
 import { UsersControllerGateway } from './users/users.controller';
+import { FaqsController } from './faqs/faqs.controller';
+import { LocationsController } from './locations/locations.controller';
+import { AccommodationsController } from './accommodations/accommodations.controller';
+import { PlaylistsController } from './playlists/playlists.controller';
+import { NotificationsController } from './notifications/notifications.controller';
 
 @Module({
   imports: [
@@ -21,7 +26,7 @@ import { UsersControllerGateway } from './users/users.controller';
     HttpModule,
     AuthModule,
   ],
-  controllers: [AppController, UsersControllerGateway],
+  controllers: [AppController, UsersControllerGateway, FaqsController, LocationsController, AccommodationsController, PlaylistsController, NotificationsController],
   providers: [AppService, RedisProvider],
 })
 export class AppModule {}
