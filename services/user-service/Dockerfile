@@ -1,6 +1,3 @@
-# Dockerfile pour chaque service NestJS
-# À copier dans chaque dossier services/*/Dockerfile
-
 FROM node:18-alpine AS builder
 
 # Installer les dépendances système
@@ -12,8 +9,8 @@ WORKDIR /app
 COPY package*.json ./
 COPY tsconfig*.json ./
 
-# Installer les dépendances
-RUN npm ci --only=production && npm cache clean --force
+# Installer toutes les dépendances (incluant devDependencies pour le build)
+RUN npm install --legacy-peer-deps && npm cache clean --force
 
 # Copier le code source
 COPY . .

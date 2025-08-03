@@ -1,98 +1,209 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
-
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
-
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+# API Gateway - Wedding Platform
 
 ## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+L'API Gateway est le point d'entrée central de la plateforme Wedding. Il gère le routage des requêtes vers les différents microservices, l'authentification JWT, et fournit des fonctionnalités de sécurité et de monitoring.
 
-## Project setup
+## Fonctionnalités
 
-```bash
-$ pnpm install
+### 🔐 Authentification
+- Validation JWT pour les routes protégées
+- Stratégie Passport JWT configurée
+- Gestion des tokens Bearer
+
+### 🛣️ Routage
+- Proxy automatique vers les microservices
+- Configuration centralisée des services
+- Gestion des erreurs de service
+
+### 🛡️ Sécurité
+- Rate limiting (100 requêtes/minute)
+- CORS configuré
+- Validation des données d'entrée
+- Protection contre les attaques CSRF
+
+### 📊 Monitoring
+- Health checks
+- Informations sur les services
+- Logs structurés
+
+## Services Routés
+
+| Service | Port | Base Path | Auth Requise |
+|---------|------|-----------|--------------|
+| User Service | 3001 | `/auth`, `/users` | Partiel |
+| FAQ Service | 3002 | `/faqs` | Non |
+| Location Service | 3003 | `/locations` | Non |
+| Accommodation Service | 3004 | `/accommodations` | Non |
+| Playlist Service | 3005 | `/playlists` | Oui |
+| Notification Service | 3006 | `/notifications` | Oui |
+
+## Endpoints
+
+### Informations
+- `GET /api` - Informations sur l'API Gateway
+- `GET /api/health` - Health check
+- `GET /api/services` - Liste des services disponibles
+
+### Routage des Services
+- `GET/POST/PUT/DELETE /api/{service-name}/*` - Routage vers les microservices
+
+## Configuration
+
+### Variables d'environnement
+
+```env
+PORT=3000
+JWT_SECRET=your-jwt-secret-here
+MONGODB_URI=mongodb://admin:password@mongodb:27017/wedding_db?authSource=admin
+REDIS_URL=redis://redis:6379
 ```
 
-## Compile and run the project
+### Rate Limiting
+
+- **TTL**: 60 secondes
+- **Limite**: 100 requêtes par IP
+- **Headers**: `X-RateLimit-*`
+
+## Développement
+
+### Installation
 
 ```bash
-# development
-$ pnpm run start
-
-# watch mode
-$ pnpm run start:dev
-
-# production mode
-$ pnpm run start:prod
+cd services/api-gateway
+npm install
 ```
 
-## Run tests
+### Démarrage en développement
 
 ```bash
-# unit tests
-$ pnpm run test
-
-# e2e tests
-$ pnpm run test:e2e
-
-# test coverage
-$ pnpm run test:cov
+npm run start:dev
 ```
 
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+### Build
 
 ```bash
-$ pnpm install -g @nestjs/mau
-$ mau deploy
+npm run build
+npm run start:prod
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+## Tests
 
-## Resources
+```bash
+# Tests unitaires
+npm run test
 
-Check out a few resources that may come in handy when working with NestJS:
+# Tests E2E
+npm run test:e2e
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+# Couverture
+npm run test:cov
+```
 
-## Support
+## Structure du Projet
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+```
+src/
+├── auth/                 # Module d'authentification
+│   ├── auth.module.ts
+│   ├── jwt.strategy.ts
+│   └── jwt-auth.guard.ts
+├── proxy/               # Module de proxy
+│   ├── proxy.module.ts
+│   ├── proxy.service.ts
+│   └── proxy.controller.ts
+├── health/              # Health checks
+│   └── health.controller.ts
+├── app.module.ts        # Module principal
+├── main.ts             # Point d'entrée
+└── redis.provider.ts   # Configuration Redis
+```
 
-## Stay in touch
+## Exemples d'utilisation
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+### Authentification
 
-## License
+```bash
+# Login
+curl -X POST http://localhost:3000/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"email": "user@example.com", "password": "password"}'
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+# Utilisation du token
+curl -X GET http://localhost:3000/api/users/profile \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN"
+```
+
+### Routage vers les services
+
+```bash
+# FAQ Service
+curl http://localhost:3000/api/faqs
+
+# Location Service
+curl http://localhost:3000/api/locations
+
+# Playlist Service (avec auth)
+curl http://localhost:3000/api/playlists \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN"
+```
+
+## Monitoring
+
+### Health Check
+
+```bash
+curl http://localhost:3000/api/health
+```
+
+Réponse :
+```json
+{
+  "status": "ok",
+  "timestamp": "2024-01-15T10:30:00Z",
+  "service": "api-gateway",
+  "version": "1.0.0"
+}
+```
+
+### Services Info
+
+```bash
+curl http://localhost:3000/api/services
+```
+
+## Déploiement
+
+L'API Gateway est configuré pour être déployé avec Docker :
+
+```bash
+docker-compose up api-gateway
+```
+
+## Troubleshooting
+
+### Service indisponible
+
+Si un microservice est indisponible, l'API Gateway retournera :
+
+```json
+{
+  "message": "Service 'service-name' is unavailable"
+}
+```
+
+### Erreur d'authentification
+
+```json
+{
+  "message": "Authentication required"
+}
+```
+
+### Rate limit dépassé
+
+```json
+{
+  "message": "ThrottlerException: Too Many Requests"
+}
+```
